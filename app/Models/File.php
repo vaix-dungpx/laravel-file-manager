@@ -14,10 +14,52 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
+
+/**
+ * @property integer $id
+ * @property string $name
+ * @property string $path
+ * @property string $storage_path
+ * @property integer $_lft
+ * @property integer $_rgt
+ * @property integer $parent_id
+ * @property boolean $is_folder
+ * @property string $mime
+ * @property integer $size
+ * @property boolean $uploaded_on_cloud
+ * @property string $created_at
+ * @property string $updated_at
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property string $deleted_at
+ * @property StarredFile[] $starredFiles
+ * @property FileShare[] $fileShares
+ */
+
 class File extends Model
 {
     use HasFactory, HasCreatorAndUpdater, NodeTrait, SoftDeletes;
 
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'path',
+        'storage_path',
+        '_lft',
+        '_rgt',
+        'parent_id',
+        'is_folder',
+        'mime',
+        'size',
+        'uploaded_on_cloud',
+        'created_at',
+        'updated_at',
+        'created_by',
+        'updated_by',
+        'deleted_at'
+    ];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -123,5 +165,33 @@ class File extends Model
             ->orderBy('file_shares.created_at', 'desc')
             ->orderBy('files.id', 'desc')
             ;
+    }
+
+    //Get Previous File Url
+    public function getPreviousFileUrl()
+    {
+        $previousFile = File::query()
+            ->where('id', '<', $this->id)
+            ->where('parent_id', $this->parent_id)
+            ->orderBy('id', 'desc')
+            ->first();
+        if ($previousFile) {
+            return $previousFile->url;
+        }
+        return null;
+    }
+
+    //Calculate Folder Size
+    public function calculateFolderSize()
+    {
+        $size = 0;
+        foreach ($this->children as $child) {
+            if ($child->is_folder) {
+                $size += $child->calculateFolderSize();
+            } else {
+                $size += $child->size;
+            }
+        }
+        return $size;
     }
 }

@@ -31,12 +31,24 @@ class FileController extends Controller
     {
         $search = $request->get('search');
 
+        $userID = Auth::id();
+
         if ($folder) {
             $folder = File::query()
                 ->where('created_by', Auth::id())
                 ->where('path', $folder)
-                ->firstOrFail();
+                ->first();
+            //If not create one
+            if (!$folder) {
+                $folder = new File();
+                $folder->name = $folder;
+                $folder->is_folder = 1;
+                $folder->created_by = Auth::id();
+                $folder->save();
+            }
+
         }
+
         if (!$folder) {
             $folder = $this->getRoot();
         }
@@ -74,6 +86,8 @@ class FileController extends Controller
         $ancestors = FileResource::collection([...$folder->ancestors, $folder]);
 
         $folder = new FileResource($folder);
+
+
 
         return Inertia::render('MyFiles', compact('files', 'folder', 'ancestors'));
     }
@@ -179,9 +193,46 @@ class FileController extends Controller
         }
     }
 
+    //Preview file
+    public function preview(Request $request)
+    {
+        $data = $request->validated();
+        $parent = $request->parent;
+        $user = $request->user();
+        $fileTree = $request->file_tree;
+
+        if (!$parent) {
+            $parent = $this->getRoot();
+        }
+
+        if (!empty($fileTree)) {
+            $this->saveFileTree($fileTree, $parent, $user);
+        } else {
+            foreach ($data['files'] as $file) {
+                /** @var \Illuminate\Http\UploadedFile $file */
+
+                $this->saveFile($file, $user, $parent);
+            }
+        }
+    }
+
     private function getRoot()
     {
-        return File::query()->whereIsRoot()->where('created_by', Auth::id())->firstOrFail();
+        $root =  File::query()
+            ->whereIsRoot()
+            ->where('created_by', Auth::id())
+            ->first();
+
+        //If null create one
+        if (!$root) {
+            $root = new File();
+            $root->name = 'root';
+            $root->is_folder = 1;
+            $root->created_by = Auth::id();
+            $root->save();
+        }
+
+        return $root;
     }
 
     public function saveFileTree($fileTree, $parent, $user)

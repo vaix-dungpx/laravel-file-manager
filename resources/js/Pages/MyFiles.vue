@@ -4,8 +4,8 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li v-for="ans of ancestors.data" :key="ans.id" class="inline-flex items-center">
                     <Link v-if="!ans.parent_id" :href="route('myFiles')"
-                          class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                        <HomeIcon class="w-4 h-4"/>
+                          class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                        <HomeIcon class="w-4 h-4 mr-2.5"/>
                         My Files
                     </Link>
                     <div v-else class="flex items-center">
@@ -58,6 +58,9 @@
                     <th class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                         Size
                     </th>
+                    <th class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                    ACTIONS
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -87,7 +90,7 @@
 
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
+                    <td data-key_file="{{file.id}}" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
                         <FileIcon :file="file"/>
                         {{ file.name }}
                     </td>
@@ -102,6 +105,22 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {{ file.size }}
+                    </td>
+                    <td class="p-4 space-x-2 whitespace-nowrap">
+                        <a href="" id="updateProductButton"   class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 ">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                            View
+                        </a>
+
+                        <a  href="" id="updateProductButton"   class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 ">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                            Update
+                        </a>
+
+                        <button type="button" id="deleteProductButton" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 ">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            Delete item
+                        </button>
                     </td>
                 </tr>
                 </tbody>
