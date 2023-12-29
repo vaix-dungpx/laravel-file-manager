@@ -36,6 +36,12 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    //dashboard
+    Route::get('dashboard', function () {
+        //Redirect myFiles
+        return redirect()->route('myFiles');
+    })->name('dashboard');
+
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
 

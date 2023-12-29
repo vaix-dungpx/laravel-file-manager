@@ -18,7 +18,9 @@
                 </div>
                 <div class="flex-1 flex flex-col overflow-hidden">
                     <slot/>
-                </div>
+
+                   <FooterLayout/>
+                 </div>
             </template>
         </main>
     </div>
@@ -40,6 +42,8 @@ import {useForm, usePage} from "@inertiajs/vue3";
 import FormProgress from "@/Components/app/FormProgress.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
 import Notification from "@/Components/Notification.vue";
+//FooterLayout.vue
+import FooterLayout from "@/Components/app/FooterLayout.vue";
 
 // Uses
 const page = usePage();
